@@ -1,0 +1,109 @@
+sequenceDiagram
+	%% 4926-У https://www.garant.ru/products/ipo/prime/doc/72039474/
+  autonumber
+  rect rgb(255, 216, 0)
+    par Первичное | 1 Work Day after Event
+    Note over BANK,FinCERT: Операция плательщика |1.6
+    BANK-->>FinCERT: БИК
+    BANK-->>FinCERT: СПЕЦ. НОМЕР ПАСПОРТ
+    BANK-->>FinCERT: СНИЛС
+    BANK-->>FinCERT: ИНН
+      alt Операция c использование карт |1.6.1
+        loop Для каждого платежа
+          BANK-->>FinCERT: Номер карты
+          BANK-->>FinCERT: Сумма операции
+          BANK-->>FinCERT: Валюта
+          BANK-->>FinCERT: Дата и время
+        end
+      else Операция по счету |1.6.2
+        loop Для каждого платежа
+          BANK-->>FinCERT: Номер счета
+          BANK-->>FinCERT: Сумма операции
+          BANK-->>FinCERT: Валюта
+          BANK-->>FinCERT: Дата и время
+        end 
+      else Операция по мобильному номеру |1.6.3
+        loop Для каждого платежа
+          BANK-->>FinCERT: Мобильный номер
+          BANK-->>FinCERT: Сумма операции
+          BANK-->>FinCERT: Валюта
+          BANK-->>FinCERT: Дата и время
+        end
+      else Операция увеличения остатка счета мобильного номера с использованием карты |1.6.4
+        loop Для каждого платежа
+          BANK-->>FinCERT: Номер карты
+          BANK-->>FinCERT: Сумма операции
+          BANK-->>FinCERT: Валюта
+          BANK-->>FinCERT: Дата и время
+        end
+      else Операция изменения остатка электронных денежных средств |1.6.5
+        loop Для каждого платежа
+          BANK-->>FinCERT: Номер электронного кошелька
+          BANK-->>FinCERT: Сумма операции
+          BANK-->>FinCERT: Валюта
+          BANK-->>FinCERT: Дата и время
+        end
+      end
+    Note over BANK,FinCERT: Операция получателя |1.7
+      alt Операция с использование карт |1.7.1
+        loop Для каждого платежа
+          BANK-->>FinCERT: Номер карты
+          opt при наличии
+            BANK-->>FinCERT: Номер счета
+          end
+        end
+      else Операция по счету |1.7.2
+        loop Для каждого платежа
+          BANK-->>FinCERT: БИК
+          BANK-->>FinCERT: Номер счета
+        end
+      else Операция по мобильному номеру |1.7.3
+        loop Для каждого платежа
+          BANK-->>FinCERT: Мобильный номер
+          BANK-->>FinCERT: Номер счета
+          BANK-->>FinCERT: БИК
+        end
+      else  Операция увеличения остатка счета мобильного номера с использованием карты |1.7.4
+        loop Для каждого платежа
+          BANK-->>FinCERT: Мобильный номер
+        end
+      else Операция изменения остатка электронных денежных средств |1.7.5
+        loop Для каждого платежа
+          BANK-->>FinCERT: Номер электронного кошелька
+        end
+      end
+    Note over BANK,FinCERT: Параметры устройств |1.8
+      BANK-->>FinCERT: IP address
+      BANK-->>FinCERT: IMSI
+      BANK-->>FinCERT: IMEI
+      BANK-->>FinCERT: ID BANKOMAT, ID Terminal
+    end
+  end
+  rect rgb(191, 223, 255)
+    par Промежуточное | 2 Work Day after Получения Информации | 1.10
+      loop Для каждого REQ
+        BANK-->>FinCERT: Обращение в МВД
+        opt If Attack
+          BANK-->>FinCERT: IOC 
+        end
+        opt При необходимости
+          BANK-->>FinCERT: fix Первичное
+        end
+      end
+    end
+  end
+  rect rgb(200, 155, 255)
+    par Окончательное | 3 Work Day after FIN Action | 1.11
+      BANK-->>FinCERT: Реализация мер
+      opt При необходимости
+        BANK-->>FinCERT: fix Первичное
+        BANK-->>FinCERT: fix Промежуточное
+      end
+    end
+  end
+
+
+
+
+
+
